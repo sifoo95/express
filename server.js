@@ -1,21 +1,32 @@
 const express = require('express')
 const app = express()
 const port = 3000
-var day = new Date();
-var numberOfDate = day.getDay();
-let time = day.getHours()  /* + ":" + day.getMinutes() + ":" + day.getSeconds(); */  
-const midelware=(request,response,next)=>{
-    if(((numberOfDate>=1)&&(numberOfDate<=5))&&((time>=9)&&(time<=18))){
-        console.log('passed')
-        request.requestTime = Date.now()
-        
-        next();
-    } 
-    
-    else{
-        console.log('we work only from Monday to Friday from 9 to 17')
-        }
-}
+const verifdate = (req, res, next) => {
+    let days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    let hour = new Date().getHours();
+  
+    if (
+      days[new Date().getDay()] !== "Saturday" &&
+      days[new Date().getDay()] !== "Sunday" &&
+      hour >= 9 &&
+      hour < 17
+    ) {
+      next();
+    } else {
+      res.send("oops! date not avilable");
+    }
+  };
+  
+  app.use(verifdate);
+
 
 app.use(express.static('public'));
 
